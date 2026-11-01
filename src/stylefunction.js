@@ -1171,7 +1171,15 @@ export function stylefunction(
                     'icon',
                     functionCache,
                   );
-                  let iconCacheKey = `${icon}.${iconSize}.${haloWidth}.${haloColor}.${iconAlignedWithMap}.${declutterMode}`;
+                  const iconOptional = getValue(
+                    layer,
+                    'layout',
+                    'icon-optional',
+                    f,
+                    functionCache,
+                    featureState,
+                  );
+                  let iconCacheKey = `${icon}.${iconSize}.${haloWidth}.${haloColor}.${iconAlignedWithMap}.${declutterMode}.${iconOptional}`;
                   if (iconColor !== null) {
                     iconCacheKey += `.${iconColor}`;
                   }
@@ -1280,6 +1288,13 @@ export function stylefunction(
                         displacement: displacement,
                         declutterMode: declutterMode,
                       });
+                    }
+                    // Older OpenLayers versions do not have setOptional()
+                    if (
+                      'setOptional' in iconImg &&
+                      typeof iconImg.setOptional === 'function'
+                    ) {
+                      iconImg.setOptional(iconOptional);
                     }
                     iconImageCache[iconCacheKey] = iconImg;
                   }
@@ -1845,6 +1860,19 @@ export function stylefunction(
             padding[1] = textPadding;
             padding[2] = textPadding;
             padding[3] = textPadding;
+          }
+          // Older OpenLayers versions do not have setOptional()
+          if ('setOptional' in text && typeof text.setOptional === 'function') {
+            text.setOptional(
+              getValue(
+                layer,
+                'layout',
+                'text-optional',
+                f,
+                functionCache,
+                featureState,
+              ),
+            );
           }
           style.setZIndex(index);
         }
