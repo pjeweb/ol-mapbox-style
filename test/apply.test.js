@@ -1280,21 +1280,11 @@ describe('ol-mapbox-style', function () {
 
   describe('Font loading', function () {
     let target;
-    beforeEach(function () {
-      target = document.createElement('div');
-      const stylesheets = document.querySelectorAll('link[rel=stylesheet]');
-      stylesheets.forEach(function (stylesheet) {
-        stylesheet.remove();
-      });
-    });
 
-    it('loads fonts from a style', async function () {
-      const map = await apply(target, {
+    function createFontStyle(webfonts, font) {
+      return {
         version: 8,
-        metadata: {
-          'ol:webfonts':
-            'https://fonts.openmaptiles.org/{font-family}/{fontweight}{-fontstyle}.css',
-        },
+        metadata: {'ol:webfonts': webfonts},
         sources: {
           test: {
             type: 'geojson',
@@ -1311,11 +1301,29 @@ describe('ol-mapbox-style', function () {
             source: 'test',
             layout: {
               'text-field': 'test',
-              'text-font': ['Open Sans Regular'],
+              'text-font': [font],
             },
           },
         ],
+      };
+    }
+
+    beforeEach(function () {
+      target = document.createElement('div');
+      const stylesheets = document.querySelectorAll('link[rel=stylesheet]');
+      stylesheets.forEach(function (stylesheet) {
+        stylesheet.remove();
       });
+    });
+
+    it('loads fonts from a style', async function () {
+      const map = await apply(
+        target,
+        createFontStyle(
+          'https://fonts.openmaptiles.org/{font-family}/{fontweight}{-fontstyle}.css',
+          'Open Sans Regular',
+        ),
+      );
       const getStyle = map.getAllLayers()[0].getStyle();
       getStyle(new Feature(new Point([0, 0])), 1);
       await createObserver(1);
@@ -1323,6 +1331,26 @@ describe('ol-mapbox-style', function () {
       should(stylesheets.length).eql(1);
       should(stylesheets.item(0).href).eql(
         'https://fonts.openmaptiles.org/open-sans/400.css',
+      );
+    });
+
+    it('resolves a relative webfonts template against the style url', async function () {
+      const map = await apply(
+        target,
+        // a font not loaded by the other tests yet
+        createFontStyle(
+          '../fonts/{font-family}/{fontweight}{-fontstyle}.css',
+          'Open Sans Light',
+        ),
+        {styleUrl: 'https://example.com/styles/basic/style.json'},
+      );
+      const getStyle = map.getAllLayers()[0].getStyle();
+      getStyle(new Feature(new Point([0, 0])), 1);
+      await createObserver(1);
+      const stylesheets = document.querySelectorAll('link[rel=stylesheet]');
+      should(stylesheets.length).eql(1);
+      should(stylesheets.item(0).href).eql(
+        'https://example.com/styles/fonts/open-sans/300.css',
       );
     });
 

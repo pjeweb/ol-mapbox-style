@@ -68,6 +68,18 @@ export function normalizeSpriteUrl(url, token, styleUrl) {
 }
 
 /**
+ * Resolves the web fonts URL template from a style's `ol:webfonts` metadata,
+ * which can be relative to the style. The `{}` placeholders are kept.
+ * @param {string} url The URL template.
+ * @param {string} [styleUrl] The style URL.
+ * @return {string} An absolute URL template.
+ * @private
+ */
+export function normalizeWebfontsUrl(url, styleUrl) {
+  return decodeURI(new URL(url, styleUrl || location.href).href);
+}
+
+/**
  * Turns mapbox:// style URLs into resolvable URLs.
  * @param {string} url The style URL.
  * @param {string} [token] The access token.
