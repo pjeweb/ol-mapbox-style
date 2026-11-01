@@ -29,10 +29,10 @@ and merge the release branch. This allows for any final review of upgrade notes 
 
 ### Publish to npm
 
-Publish from `main`, so the published package matches the merged release. Make sure the latest commit is the merge of the release pull request, and install the locked dependencies before publishing.
+Publish from the latest `main`, so the published package matches the merged release. Check it out as a detached HEAD, so the release artifacts committed in the next step do not end up on a branch. Make sure the latest commit is the merge of the release pull request, and install the locked dependencies before publishing.
 
-    git checkout main
-    git pull
+    git fetch origin
+    git checkout --detach origin/main
     git log -1
     npm ci
     npm publish
