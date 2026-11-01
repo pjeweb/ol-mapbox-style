@@ -35,6 +35,7 @@ import {
   normalizeSourceUrl,
   normalizeSpriteDefinition,
   normalizeStyleUrl,
+  normalizeWebfontsUrl,
 } from './mapbox.js';
 import {
   configureHillshadeLayer,
@@ -427,8 +428,13 @@ export function applyStyle(
               resolutions,
               spriteData,
               spriteImageUrl,
-              (fonts, templateUrl = options.webfonts) =>
-                getFonts(fonts, templateUrl),
+              (fonts, templateUrl) =>
+                getFonts(
+                  fonts,
+                  templateUrl
+                    ? normalizeWebfontsUrl(templateUrl, styleUrl)
+                    : options.webfonts,
+                ),
               options.getImage,
               layerProperty,
             );
