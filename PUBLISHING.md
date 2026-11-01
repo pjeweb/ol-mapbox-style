@@ -11,7 +11,7 @@ Note that all the examples below use 2.11.0 as the release version, you'll want 
 
 We use [semantic versioning](https://semver.org). Set the correct `"version"` in package.json. Run `npm install` so `package-lock.json` can pick up the changes.
 
-Edit `CHANGELOG.md`: Add the version you are about to release just below the `## Next version` heading. Review the changes since the last release and document changes as appropriate.
+Edit `CHANGELOG.md`: Add the version you are about to release just below the `## Next release` heading. Review the changes since the last release and document changes as appropriate.
 
 Commit the changes.
 
@@ -23,12 +23,18 @@ Commit the changes.
 
 Create a pull request
 
-    git push origin release-v2.10.0
+    git push origin release-v2.11.0
 
 and merge the release branch. This allows for any final review of upgrade notes or other parts of the changelog.
 
 ### Publish to npm
 
+Publish from `main`, so the published package matches the merged release. Make sure the latest commit is the merge of the release pull request, and install the locked dependencies before publishing.
+
+    git checkout main
+    git pull
+    git log -1
+    npm ci
     npm publish
 
 ### Commit release artifacts
@@ -43,4 +49,4 @@ and merge the release branch. This allows for any final review of upgrade notes 
 
 ### Edit the release notes
 
-The previous step creates a release on GitHub. Copy the changelog for the relese from `CHANGELOG.md` to the "Describe this release" field for the release notes on https://github.com/openlayers/ol-mapbox-style/releases.
+The previous step creates a release on GitHub. Copy the changelog for the release from `CHANGELOG.md` to the "Describe this release" field for the release notes on https://github.com/openlayers/ol-mapbox-style/releases.
