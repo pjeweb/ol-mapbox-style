@@ -1,7 +1,8 @@
 # Changelog
 
-## Next release
+## 13.9.0
 
+* Resolve a relative `ol:webfonts` URL in a style's metadata against the style URL.
 * Do not share one style object between maps that load the same style URL at the same time. Before, `updateMapboxLayer()` on one of them also changed the other.
 * Release layers and styles once they are no longer used. Before, every layer styled by `stylefunction()` stayed in memory with its style and its map, even after `map.dispose()`.
 * Do not add an `id` to style objects that have none. The generated id was only used internally as a cache key.
