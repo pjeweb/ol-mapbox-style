@@ -4,12 +4,17 @@ Run from an installed ol-mapbox-style worktree. This uses the existing Rollup an
 Puppeteer dependencies and imports `src/apply.js` directly; no library build or
 server is needed.
 
-First download the public [basemap.de color style](https://basemap.de/produkte-und-dienste/web-vektor/),
-sprites and tiles needed for the three views:
+Install the repository dependencies, then run the benchmark setup:
 
 ```sh
-npm run benchmark -- --prepare --cache ../benchmark-inputs --output ../prepared.json
+npm ci
+npm run benchmark:setup -- --cache ../benchmark-inputs --output ../prepared.json
 ```
+
+Setup automatically downloads the public [basemap.de color style](https://basemap.de/produkte-und-dienste/web-vektor/),
+its TileJSON, sprite JSON/PNG, and the vector tiles needed for zooms 13, 14 and 15.
+The runner discovers these resources by loading the three views, and stores their
+URLs and SHA-256 hashes in `../benchmark-inputs/manifest.json`.
 
 Then measure the current worktree with those inputs, without network access:
 
@@ -29,7 +34,7 @@ installed. The benchmark files can also be copied into another worktree and run
 with `node benchmarks/run.js` instead of the npm command.
 
 The first preparation pins input bytes by SHA-256. Keep the same cache for every
-comparison; another `--prepare` downloads a fresh set. Missing or changed cached
+comparison; another `benchmark:setup` downloads a fresh set. Missing or changed cached
 bytes fail the measured run. Keep the cache and result files outside the checkout.
 
 ## What is measured

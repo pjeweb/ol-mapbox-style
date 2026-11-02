@@ -44,6 +44,7 @@
     "style-spec:check": "node tasks/style-spec.js check",
     "karma": "karma start test/karma.conf.cjs",
     "benchmark": "node benchmarks/run.js",
+    "benchmark:setup": "node benchmarks/run.js --prepare",
     "lint": "eslint benchmarks test examples src tasks",
     "typecheck": "tsc --project tsconfig-typecheck.json",
     "pretest": "npm run lint && npm run typecheck && npm run style-spec:check && npm run style-spec:generate && npm run typecheck",
